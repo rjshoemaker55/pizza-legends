@@ -51,13 +51,45 @@ class Overworld {
     step();
   }
 
+  bindActionInput() {
+    new KeypressListener('Enter', () => {
+      // Is there a person here to talk to?
+      this.map.checkForActionCutscene();
+    });
+  }
+
+  bindHeroPositionCheck() {
+    document.addEventListener('PersonWalkingComplete', (e) => {
+      if (e.detail.whoId === 'hero') {
+        // Hero's position has changed
+        this.map.checkForFootstepCutscene();
+      }
+    });
+  }
+
   init() {
+    // Creates a new overworld map using the demo room map
     this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+    // Mounts the objects on the map and adds "walls" where they are
     this.map.mountObjects();
 
+    this.bindActionInput();
+    this.bindHeroPositionCheck();
+
+    // Instantiates a new directionInput object to take keybaord inputs
     this.directionInput = new DirectionInput();
     this.directionInput.init();
 
     this.startGameLoop();
+
+    // this.map.startCutscene([
+    //   { who: 'hero', type: 'walk', direction: 'down' },
+    //   { who: 'hero', type: 'walk', direction: 'down' },
+    //   { who: 'hero', type: 'walk', direction: 'down' },
+    //   { who: 'npcA', type: 'walk', direction: 'left' },
+    //   { who: 'npcB', type: 'stand', direction: 'up' },
+    //   { who: 'hero', type: 'stand', direction: 'right' },
+    //   { type: 'textMessage', text: 'Why hello there!' }
+    // ]);
   }
 }

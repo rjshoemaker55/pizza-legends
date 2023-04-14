@@ -12,6 +12,8 @@ class GameObject {
 
     this.behaviorLoop = config.behaviorLoop || [];
     this.behaviorLoopIndex = 0;
+
+    this.talking = config.talking || [];
   }
 
   mount(map) {
@@ -27,8 +29,8 @@ class GameObject {
   update() {}
 
   async doBehaviorEvent(map) {
-    // Don't do anything if cutscene playing or no behavior loop
-    if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+    // Don't do anything if cutscene playing or no behavior loop or character is standing
+    if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding === true) {
       return;
     }
 
